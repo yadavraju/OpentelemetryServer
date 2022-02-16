@@ -1,16 +1,9 @@
 # Project Demonstrating Observability For Java Spring Applications
 
 This project demonstrates Observability using:
-
-* [Prometheus](https://prometheus.io/) for monitoring and alerting
-* [Loki](https://grafana.com/oss/loki/) for Distributed Logging
-* [Tempo](https://grafana.com/oss/tempo/) for Distributed Tracing
-* [Grafan](https://grafana.com/) for visualization
-
 And basically integrates the following
 
 * [Opentelemetry](https://opentelemetry.io/)
-* [Grafan Tempo](https://grafana.com/oss/tempo/) Which internally uses [Jaeger](https://www.jaegertracing.io/)
 * [Spring Boot Project](https://spring.io/projects/spring-boot)
 
 
