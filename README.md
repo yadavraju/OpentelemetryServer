@@ -112,11 +112,5 @@ You can view it in [Grafana](http://localhost:3000/explore?orgId=1&left=%5B%22no
 ![](docs/img/pgAdminDb.png)
 
 
-# Credits
-
-* [otel-demo](https://github.com/williewheeler/otel-demo)
-* [java-agent-spring-boot-example](https://github.com/objectiser/java-agent-spring-boot-example)
-
-
-# Also See
-* [Nodejs Opentelemetry Tempo](https://github.com/mnadeem/nodejs-opentelemetry-tempo)
+# Client Project Android
+[Connect](https://github.com/yadavraju/DisneyCodeChallenge)
