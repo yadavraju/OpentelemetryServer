@@ -12,13 +12,14 @@ import io.opentelemetry.exporter.logging.LoggingSpanExporter;
 import io.opentelemetry.sdk.OpenTelemetrySdk;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.export.SimpleSpanProcessor;
-
-import java.util.concurrent.TimeUnit;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * All SDK management takes place here, away from the instrumentation code, which should only access
  * the OpenTelemetry APIs.
  */
+@Configuration
 public class ExampleConfiguration {
 
     /**
@@ -27,8 +28,9 @@ public class ExampleConfiguration {
      *
      * @return A ready-to-use {@link OpenTelemetry} instance.
      */
-   public static OpenTelemetry initOpenTelemetry() {
-        //Export traces to Jaeger
+    @Bean
+    public OpenTelemetry initOpenTelemetry() {
+
         SdkTracerProvider sdkTracerProvider =
                 SdkTracerProvider.builder()
                         .addSpanProcessor(SimpleSpanProcessor.create(new LoggingSpanExporter()))

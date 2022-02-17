@@ -24,13 +24,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class FlightController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlightController.class);
-    OpenTelemetry openTelemetry = ExampleConfiguration.initOpenTelemetry();
-    private final Tracer tracer = openTelemetry.getTracer("Api:Call");
+    private final OpenTelemetry openTelemetry;
+    private final Tracer tracer;
 
-    private FlightService flightService;
+    private final FlightService flightService;
 
-    public FlightController(FlightService flightService) {
+    public FlightController(FlightService flightService, OpenTelemetry openTelemetry) {
         this.flightService = flightService;
+        this.openTelemetry = openTelemetry;
+        tracer = openTelemetry.getTracer("Api:Call");
 
     }
 
@@ -55,7 +57,7 @@ public class FlightController {
                 return s;
             }
         });
-        Span span = tracer.spanBuilder("MyRequest").setParent(context).setSpanKind(SpanKind.SERVER).startSpan();
+        Span span = tracer.spanBuilder("requesting-from-mobile-app").setParent(context).setSpanKind(SpanKind.SERVER).startSpan();
         try (Scope ignored = span.makeCurrent()) {
             return flightService.getFlights(origin);
         } finally {
