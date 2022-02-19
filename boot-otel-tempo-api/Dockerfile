@@ -17,7 +17,6 @@ EXPOSE 8080
 ENV JAVA_OPTS "${JAVA_OPTS} \
   -Dotel.traces.exporter=otlp,jaeger \
   -Dotel.metrics.exporter=otlp \
-  -Dotel.logs.exporter=otlp \
   -Dotel.exporter.jaeger.endpoint=http://jaeger:14250 \
   -Dotel.exporter.otlp.endpoint=http://192.168.0.102:4317 \
   -Dotel.resource.attributes="service.name=${APP_NAME}" \

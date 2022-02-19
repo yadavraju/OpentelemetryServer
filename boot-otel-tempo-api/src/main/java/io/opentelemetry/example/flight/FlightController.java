@@ -13,6 +13,7 @@ import io.opentelemetry.context.propagation.ContextPropagators;
 import io.opentelemetry.context.propagation.TextMapGetter;
 import io.opentelemetry.context.propagation.TextMapPropagator;
 import io.opentelemetry.example.opentelemetry.ExampleConfiguration;
+import io.opentelemetry.example.utils.OTelContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,6 @@ public class FlightController {
     private static final Logger LOGGER = LoggerFactory.getLogger(FlightController.class);
     private final OpenTelemetry openTelemetry;
     private final Tracer tracer;
-
     private final FlightService flightService;
 
     public FlightController(FlightService flightService, OpenTelemetry openTelemetry) {
@@ -37,32 +37,17 @@ public class FlightController {
     }
 
     @GetMapping("/flights")
-    public List<Flight> greeting(@RequestHeader(value = "traceparent") String traceparent, @RequestParam(value = "origin", defaultValue = "India") String origin) {
+    public List<Flight> greeting(@RequestHeader(value = "traceparent", required = false) String traceparent, @RequestParam(value = "origin", defaultValue = "India") String origin) {
         LOGGER.info("Before Service Method Call: " + traceparent);
-        ContextPropagators propagators = openTelemetry.getPropagators();
-        TextMapPropagator textMapPropagator = propagators.getTextMapPropagator();
-        Context context = textMapPropagator.extract(Context.current(), traceparent, new TextMapGetter<String>() {
-            @Override
-            public Iterable<String> keys(String s) {
-                LOGGER.info("key: " + s);
-                List<String> list = new ArrayList<>();
-                list.add(s);
-                return list;
+        if (traceparent != null) {
+            Span span = tracer.spanBuilder("requesting-from-mobile-app").setParent(OTelContext.getContext(traceparent, openTelemetry)).setSpanKind(SpanKind.SERVER).startSpan();
+            try (Scope ignored = span.makeCurrent()) {
+                return flightService.getFlights(origin);
+            } finally {
+                span.end();
             }
-
-            @Override
-            public String get(String s, String s2) {
-                LOGGER.info("key1: " + s);
-                LOGGER.info("key2: " + s2);
-                return s;
-            }
-        });
-        Span span = tracer.spanBuilder("requesting-from-mobile-app").setParent(context).setSpanKind(SpanKind.SERVER).startSpan();
-        try (Scope ignored = span.makeCurrent()) {
+        } else {
             return flightService.getFlights(origin);
-        } finally {
-            span.end();
         }
     }
-
 }
