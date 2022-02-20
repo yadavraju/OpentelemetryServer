@@ -1,0 +1,27 @@
+extensions:
+  health_check: {}
+receivers:
+  otlp:
+    protocols:
+      grpc:
+  fluentforward:
+    endpoint: 0.0.0.0:8006
+exporters:
+  logging:
+    logLevel: $LOG_EXPORTER_LOG_LEVEL
+  otlp:
+    endpoint: https://otlp.nr-data.net:4317
+    headers:
+      "api-key": 45c1d53f987184766fc84d0a2cc8ba31bdc8NRAL
+service:
+  extensions: [health_check]
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      exporters: [logging, otlp]
+    traces:
+      receivers: [otlp]
+      exporters: [logging, otlp]
+    logs:
+      receivers: [fluentforward]
+      exporters: [logging, otlp]

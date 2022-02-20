@@ -21,79 +21,76 @@ parameters:
 
 objects:
 
-- apiVersion: apps.openshift.io/v1
-  kind: DeploymentConfig
-  metadata:
-    labels:
-      app: ${APP_NAME}
-    name: ${APP_NAME}
-    namespace: "${NAME_SPACE}"
-  spec:
-    selector:
-      app: ${APP_NAME}
-    template:
-      metadata:
-        labels:
-          app: ${APP_NAME}
-        name: ${APP_NAME}
-        annotations:
-          prometheus.io/scrape: "true"
-          #prometheus.io/port: "3101"
-          prometheus.io/path: "/metrics"
-      spec:
-        containers:
-          - name: ${APP_NAME}
-            image: ${IMAGE}
-            ports:
-              - name: metrics
-                containerPort: 8090
-            env:
-              - name: PROVIDER1_DB_URL
-                valueFrom:
-                  configMapKeyRef:
-                    name: app-config
-                    key: PROVIDER1_DB_URL
-              - name: PROVIDER1_DB_USER
-                valueFrom:
-                  configMapKeyRef:
-                    name: app-config
-                    key: PROVIDER1_DB_USER
-              - name: PROVIDER1_DB_PASS
-                valueFrom:
-                 secretKeyRef:
-                   name: app-secret
-                   key:  PROVIDER1_DB_PASS
-              - name: POD_NAME
-                valueFrom:
-                  fieldRef:
-                    fieldPath: metadata.name
-            livenessProbe:
-              httpGet:
-                path: /actuator/health/liveness
-                port: metrics
-              initialDelaySeconds: 120
-              timeoutSeconds: 5
-              periodSeconds: 5
-              failureThreshold: 5
-              successThreshold: 1
-            readinessProbe:
-              httpGet:
-                path: /actuator/health/readiness
-                port: metrics
-              initialDelaySeconds: 120
-              timeoutSeconds: 5
-              periodSeconds: 3
-            resources:
-              limits:
-                cpu: "500m"
-                memory: "128Mi"
-              requests:
-                cpu: "250m"
-                memory: "64Mi"
-            volumeMounts:
-              - name: log-data-volume
-                mountPath: /app/log
-        volumes:
-          - name: log-data-volume
-            persistentVolumeClaim:
-              claimName: log-data
+  - apiVersion: apps.openshift.io/v1
+    kind: DeploymentConfig
+    metadata:
+      labels:
+        app: ${APP_NAME}
+      name: ${APP_NAME}
+      namespace: "${NAME_SPACE}"
+    spec:
+      selector:
+        app: ${APP_NAME}
+      template:
+        metadata:
+          labels:
+            app: ${APP_NAME}
+          name: ${APP_NAME}
+          annotations:
+        spec:
+          containers:
+            - name: ${APP_NAME}
+              image: ${IMAGE}
+              ports:
+                - name: metrics
+                  containerPort: 8090
+              env:
+                - name: PROVIDER1_DB_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: app-config
+                      key: PROVIDER1_DB_URL
+                - name: PROVIDER1_DB_USER
+                  valueFrom:
+                    configMapKeyRef:
+                      name: app-config
+                      key: PROVIDER1_DB_USER
+                - name: PROVIDER1_DB_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: app-secret
+                      key: PROVIDER1_DB_PASS
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+              livenessProbe:
+                httpGet:
+                  path: /actuator/health/liveness
+                  port: metrics
+                initialDelaySeconds: 120
+                timeoutSeconds: 5
+                periodSeconds: 5
+                failureThreshold: 5
+                successThreshold: 1
+              readinessProbe:
+                httpGet:
+                  path: /actuator/health/readiness
+                  port: metrics
+                initialDelaySeconds: 120
+                timeoutSeconds: 5
+                periodSeconds: 3
+              resources:
+                limits:
+                  cpu: "500m"
+                  memory: "128Mi"
+                requests:
+                  cpu: "250m"
+                  memory: "64Mi"
+              volumeMounts:
+                - name: log-data-volume
+                  mountPath: /app/log
+          volumes:
+            - name: log-data-volume
+              persistentVolumeClaim:
+                claimName: log-data

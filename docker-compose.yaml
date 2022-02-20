@@ -1,6 +1,20 @@
 version: "3.8"
 
 services:
+  oltp-collector:
+    image: otel/opentelemetry-collector-contrib:0.33.0
+    volumes:
+      - ./new-relic-exporter/otel-config.yaml:/otel-config.yaml
+    entrypoint: [ "/otelcontribcol" ]
+    command: [ "--config", "/otel-config.yaml" ]
+    environment:
+      LOG_EXPORTER_LOG_LEVEL: "DEBUG"
+      NEW_RELIC_API_KEY: "45c1d53f987184766fc84d0a2cc8ba31bdc8NRAL"
+    ports:
+      - "4317:4317"     # grpc
+      - "13133:13133"   # health
+      - "8006:8006"     # fluentdforward
+      - "8006:8006/udp" # fluentforward
 
   provider1-db:
     image: postgres
@@ -62,4 +76,4 @@ services:
       - "16686:16686"
       - "14268:14268"
       - "14250:14250"
-#      - "9411:9411" //zipkin port optional
+  #      - "9411:9411" //zipkin port optional

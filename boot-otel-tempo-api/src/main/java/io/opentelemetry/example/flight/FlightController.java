@@ -1,18 +1,12 @@
 package io.opentelemetry.example.flight;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.SpanKind;
 import io.opentelemetry.api.trace.Tracer;
-import io.opentelemetry.context.Context;
 import io.opentelemetry.context.Scope;
-import io.opentelemetry.context.propagation.ContextPropagators;
-import io.opentelemetry.context.propagation.TextMapGetter;
-import io.opentelemetry.context.propagation.TextMapPropagator;
-import io.opentelemetry.example.opentelemetry.ExampleConfiguration;
 import io.opentelemetry.example.utils.OTelContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

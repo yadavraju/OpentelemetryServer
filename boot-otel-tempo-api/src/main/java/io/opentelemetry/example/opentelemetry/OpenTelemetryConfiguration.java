@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Configuration;
  * the OpenTelemetry APIs.
  */
 @Configuration
-public class ExampleConfiguration {
+public class OpenTelemetryConfiguration {
 
     /**
      * Initializes the OpenTelemetry SDK with a logging span exporter and the W3C Trace Context
